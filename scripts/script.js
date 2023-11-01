@@ -71,17 +71,20 @@ deleteButton.addEventListener("click", async() => {
 
 putButton.addEventListener("click", async() =>{
 
-	fetch(API_URL + putId.value)
+	await fetch(API_URL + putId.value)
 		.then(x => x.json())
 		.then(y => modifyModal(y));
+
 		
 	function modifyModal(object){
-		console.log(object)
 		const modal = document.getElementById("dataModal");
 		const putName = document.getElementById("inputPutNombre");
 		const putSurname = document.getElementById("inputPutApellido");
 		const sendButton = document.getElementById("btnSendChanges");
-		
+		if (typeof object == "string"){
+			bootstrap.Modal.getInstance(modal).hide();
+			showError();
+		}
 		putName.value = object.name;
 		putSurname.value = object.lastname;
 		
@@ -96,7 +99,7 @@ putButton.addEventListener("click", async() =>{
 			object.name = putName.value;
 			object.lastname = putSurname.value;
 			displayData(await putData(API_URL + putId.value, object));
-			bootstrap.Modal.getOrCreateInstance(modal).hide();
+			bootstrap.Modal.getInstance(modal).hide();
 		});
 		
 	}
